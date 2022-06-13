@@ -34,22 +34,23 @@ class F1(callbacks.Plugin):
 
         data = requests.get("https://ergast.com/api/f1/current/driverStandings.json")
         if year:
-            data = requests.get("https://ergast.com/api/f1/%s/driverStandings.json" % (year))
-        driver_standings = json.loads(data.content)["MRData"]["StandingsTable"]["StandingsLists"][0]["DriverStandings"]
+            data = requests.get(
+                "https://ergast.com/api/f1/%s/driverStandings.json" % (year)
+            )
+        driver_standings = json.loads(data.content)["MRData"]["StandingsTable"][
+            "StandingsLists"
+        ][0]["DriverStandings"]
         string_segments = []
-
-
 
         for driver in driver_standings:
             name = driver["Driver"]["code"]
             position = driver["positionText"]
             points = driver["points"]
-            string_segments.append(f'\x035{name}\x0F {points}')
+            string_segments.append(f"\x035{name}\x0F {points}")
 
         irc.reply(", ".join(string_segments))
 
-    champ = wrap(champ,[optional("int")])
-
+    champ = wrap(champ, [optional("int")])
 
     def gp(self, irc, msg, args, race):
         """<year>
@@ -59,20 +60,23 @@ class F1(callbacks.Plugin):
 
         data = requests.get("https://ergast.com/api/f1/current/last/results.json")
         if race:
-            data = requests.get("https://ergast.com/api/f1/current/%s/results.json" % (race))
-        driver_result = json.loads(data.content)["MRData"]["RaceTable"]["Races"][0]["Results"]
+            data = requests.get(
+                "https://ergast.com/api/f1/current/%s/results.json" % (race)
+            )
+        driver_result = json.loads(data.content)["MRData"]["RaceTable"]["Races"][0][
+            "Results"
+        ]
         string_segments = []
 
         for driver in driver_result:
             name = driver["Driver"]["code"]
             position = driver["positionText"]
             points = driver["points"]
-            string_segments.append(f'{position} \x035{name}\x0F {points}')
+            string_segments.append(f"{position} \x035{name}\x0F {points}")
 
         irc.reply(", ".join(string_segments))
 
-    gp = wrap(gp,[optional("int")])
-
+    gp = wrap(gp, [optional("int")])
 
     def constructor(self, irc, msg, args, year):
         """<year>
@@ -80,22 +84,27 @@ class F1(callbacks.Plugin):
         F1 Standings
         """
 
-        data = requests.get("https://ergast.com/api/f1/current/constructorStandings.json")
+        data = requests.get(
+            "https://ergast.com/api/f1/current/constructorStandings.json"
+        )
         if year:
-            data = requests.get("https://ergast.com/api/f1/current/constructorStandings.json" % (year))
-        driver_result = json.loads(data.content)["MRData"]["StandingsTable"]["StandingsLists"][0]["ConstructorStandings"]
+            data = requests.get(
+                "https://ergast.com/api/f1/current/constructorStandings.json" % (year)
+            )
+        driver_result = json.loads(data.content)["MRData"]["StandingsTable"][
+            "StandingsLists"
+        ][0]["ConstructorStandings"]
         string_segments = []
 
         for driver in driver_result:
             name = driver["Constructor"]["name"]
             position = driver["positionText"]
             points = driver["points"]
-            string_segments.append(f'{position} \x035{name}\x0F {points}')
+            string_segments.append(f"{position} \x035{name}\x0F {points}")
 
         irc.reply(", ".join(string_segments))
 
-    constructor  = wrap(constructor,[optional("int")])
-
+    constructor = wrap(constructor, [optional("int")])
 
 
 Class = F1
